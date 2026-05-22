@@ -19,6 +19,20 @@ VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
 ```
 
+## Despliegue en GitHub Pages
+
+El repositorio incluye un workflow en `.github/workflows/deploy.yml`.
+
+Para publicarlo:
+
+1. En GitHub ve a `Settings` -> `Pages`.
+2. En `Source`, selecciona `GitHub Actions`.
+3. En `Settings` -> `Secrets and variables` -> `Actions` -> `Variables`, crea:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+
+El despliegue se ejecuta automaticamente cuando haces push a `main`.
+
 ## Estructura
 
 - `electron/`: proceso principal y preload.
