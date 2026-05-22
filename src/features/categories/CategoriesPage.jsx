@@ -1,0 +1,116 @@
+import { useEffect, useState } from 'react';
+import PageHeader from '../../components/ui/PageHeader';
+import CategoryForm from '../../components/categories/CategoryForm';
+import CategoryList from '../../components/categories/CategoryList';
+import { createCategory, deleteCategory, fetchCategories } from '../../services/categoryService';
+
+export default function CategoriesPage() {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [deletingId, setDeletingId] = useState('');
+  const [feedback, setFeedback] = useState({ type: '', message: '' });
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadCategories() {
+      try {
+        const data = await fetchCategories();
+
+        if (!ignore) {
+          setCategories(data);
+        }
+      } catch {
+        if (!ignore) {
+          setFeedback({ type: 'error', message: 'No pudimos cargar tus categorias.' });
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadCategories();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  async function handleCreate(form) {
+    try {
+      setCreating(true);
+      setFeedback({ type: '', message: '' });
+      const created = await createCategory(form);
+      setCategories((current) =>
+        [...current, created].sort((a, b) => {
+          if (a.type !== b.type) {
+            return a.type.localeCompare(b.type);
+          }
+
+          return a.name.localeCompare(b.name);
+        })
+      );
+      setFeedback({ type: 'success', message: 'Categoria creada correctamente.' });
+    } catch {
+      setFeedback({ type: 'error', message: 'No pudimos crear la categoria.' });
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function handleDelete(category) {
+    const confirmed = window.confirm(`¿Deseas borrar la categoria "${category.name}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingId(category.id);
+      setFeedback({ type: '', message: '' });
+      await deleteCategory(category.id);
+      setCategories((current) => current.filter((item) => item.id !== category.id));
+      setFeedback({ type: 'success', message: 'Categoria eliminada correctamente.' });
+    } catch {
+      setFeedback({ type: 'error', message: 'No pudimos borrar la categoria.' });
+    } finally {
+      setDeletingId('');
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="Categorias"
+        title="Organiza tu dinero a tu manera"
+        description="Crea categorias propias para que cada movimiento quede bien clasificado y sea facil de entender."
+      />
+
+      {feedback.message ? (
+        <div
+          className={[
+            'rounded-[28px] p-5 text-sm',
+            feedback.type === 'success'
+              ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+              : 'border border-rose-200 bg-rose-50 text-rose-700',
+          ].join(' ')}
+        >
+          {feedback.message}
+        </div>
+      ) : null}
+
+      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+        <CategoryForm onCreate={handleCreate} submitting={creating} />
+        <CategoryList
+          categories={categories}
+          loading={loading}
+          deletingId={deletingId}
+          onDelete={handleDelete}
+        />
+      </div>
+    </div>
+  );
+}
