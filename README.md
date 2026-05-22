@@ -1,13 +1,12 @@
 # FinanzasApp
 
-Aplicacion para gestionar finanzas personales construida con React, Vite, Electron, Tailwind CSS y Supabase.
+Aplicacion web para gestionar finanzas personales construida con React, Vite, Tailwind CSS y Supabase.
 
 ## Scripts
 
-- `npm run dev`: levanta Vite y Electron en desarrollo.
+- `npm run dev`: levanta la app web en desarrollo.
 - `npm run build`: genera el build web.
-- `npm run build:desktop`: empaqueta la app de escritorio.
-- `npm run start`: abre Electron usando el build existente.
+- `npm run preview`: sirve el build generado localmente.
 
 ## Variables de entorno
 
@@ -35,7 +34,6 @@ El despliegue se ejecuta automaticamente cuando haces push a `main`.
 
 ## Estructura
 
-- `electron/`: proceso principal y preload.
 - `src/app/`: router, configuracion y layout principal.
 - `src/features/`: paginas por dominio.
 - `src/components/`: componentes reutilizables.
