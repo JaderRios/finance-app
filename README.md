@@ -1,6 +1,6 @@
-# FinanzasApp Desktop
+# FinanzasApp
 
-MVP de escritorio para finanzas personales construido con React, Vite, Electron, Tailwind CSS y Supabase.
+Aplicacion para gestionar finanzas personales construida con React, Vite, Electron, Tailwind CSS y Supabase.
 
 ## Scripts
 
@@ -11,7 +11,7 @@ MVP de escritorio para finanzas personales construido con React, Vite, Electron,
 
 ## Variables de entorno
 
-1. Copia `.env.example` a `.env`
+1. Copia `.env.example` a `.env`.
 2. Configura:
 
 ```env
@@ -22,8 +22,8 @@ VITE_SUPABASE_ANON_KEY=
 ## Estructura
 
 - `electron/`: proceso principal y preload.
-- `src/app/`: router y layout principal.
-- `src/features/`: páginas por dominio.
+- `src/app/`: router, configuracion y layout principal.
+- `src/features/`: paginas por dominio.
 - `src/components/`: componentes reutilizables.
 - `src/services/`: consultas a Supabase.
-- `src/lib/`: configuración compartida.
+- `src/lib/`: configuracion compartida.
