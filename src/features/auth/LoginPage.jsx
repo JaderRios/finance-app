@@ -100,30 +100,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#dfeaff,_#f8fbff_48%,_#eef3ff_100%)] p-4 dark:bg-[radial-gradient(circle_at_top_left,_#10203b,_#0f172a_44%,_#111827_100%)] md:p-6">
-      <div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1440px] items-center gap-6 rounded-[40px] border border-white/50 bg-white/45 p-4 shadow-[0_25px_100px_rgba(37,99,235,0.10)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/45 lg:grid-cols-[1.15fr_0.85fr] lg:p-6">
-        <section className="relative overflow-hidden rounded-[36px] bg-[linear-gradient(135deg,#e8f0ff_0%,#f8fbff_60%,#eae1ff_100%)] p-8 dark:bg-[linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.95),rgba(49,46,129,0.55))] lg:p-10">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#dfeaff,_#f8fbff_48%,_#eef3ff_100%)] p-3 dark:bg-[radial-gradient(circle_at_top_left,_#10203b,_#0f172a_44%,_#111827_100%)] md:p-6">
+      <div className="mx-auto grid min-h-[calc(100vh-1.5rem)] max-w-[1440px] gap-3 rounded-[32px] border border-white/50 bg-white/45 p-3 shadow-[0_25px_100px_rgba(37,99,235,0.10)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/45 lg:min-h-[calc(100vh-3rem)] lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-6 lg:rounded-[40px] lg:p-6">
+        <section className="order-2 relative overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#e8f0ff_0%,#f8fbff_60%,#eae1ff_100%)] p-5 dark:bg-[linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.95),rgba(49,46,129,0.55))] sm:p-6 lg:order-1 lg:rounded-[36px] lg:p-10">
           <div className="absolute -right-12 top-10 h-40 w-40 rounded-full bg-blue-200/35 blur-3xl dark:bg-sky-500/10" />
           <div className="absolute bottom-0 left-10 h-28 w-28 rounded-full bg-indigo-200/35 blur-3xl dark:bg-indigo-500/10" />
 
           <div className="relative max-w-xl">
-            <div className="inline-flex items-center gap-3 rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm dark:bg-slate-900/70 dark:text-sky-300">
-              <span className="grid size-9 place-items-center rounded-full bg-blue-600 text-white">
-                <Landmark size={18} />
+            <div className="inline-flex items-center gap-3 rounded-full bg-white/70 px-3 py-2 text-xs font-semibold text-blue-700 shadow-sm dark:bg-slate-900/70 dark:text-sky-300 sm:px-4 sm:text-sm">
+              <span className="grid size-8 place-items-center rounded-full bg-blue-600 text-white sm:size-9">
+                <Landmark size={16} />
               </span>
               FinanzasApp
             </div>
 
-            <h1 className="mt-8 text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100 lg:text-5xl">
+            <h1 className="mt-5 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl lg:mt-8 lg:text-5xl">
               Tu centro de control financiero personal
             </h1>
-            <p className="mt-5 max-w-lg text-base leading-7 text-slate-600 dark:text-slate-300">
+            <p className="mt-3 max-w-lg text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base sm:leading-7 lg:mt-5">
               Inicia sesion o crea tu cuenta para llevar el control de tu dinero con una experiencia simple,
               visual y siempre a mano.
             </p>
           </div>
 
-          <div className="relative mt-10 grid gap-4 md:grid-cols-3">
+          <div className="relative mt-8 hidden gap-4 md:grid-cols-3 lg:grid">
             <div className="rounded-[28px] bg-white/75 p-5 shadow-sm dark:bg-slate-900/70">
               <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Dashboard</p>
               <p className="mt-3 text-3xl font-black text-slate-900 dark:text-slate-100">Ingresos vs gastos</p>
@@ -139,13 +139,23 @@ export default function LoginPage() {
           </div>
         </section>
 
-        <section className="rounded-[36px] bg-white p-7 shadow-sm dark:bg-slate-900/92 lg:p-8">
-          <div className="inline-flex rounded-full bg-slate-100 p-1 dark:bg-slate-800">
+        <section className="order-1 rounded-[28px] bg-white p-5 shadow-sm dark:bg-slate-900/92 sm:p-6 lg:order-2 lg:rounded-[36px] lg:p-8">
+          <div className="mb-5 flex items-center gap-3 lg:hidden">
+            <div className="grid size-11 place-items-center rounded-[16px] bg-[linear-gradient(180deg,#2f6df6,#1e54df)] text-white shadow-lg shadow-blue-200">
+              <Landmark size={20} />
+            </div>
+            <div>
+              <p className="text-base font-black tracking-tight text-slate-900 dark:text-slate-100">FinanzasApp</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Control claro desde tu celular</p>
+            </div>
+          </div>
+
+          <div className="inline-flex w-full rounded-full bg-slate-100 p-1 dark:bg-slate-800">
             <button
               type="button"
               onClick={() => switchMode('login')}
               className={[
-                'rounded-full px-5 py-2 text-sm font-semibold transition',
+                'flex-1 rounded-full px-4 py-2 text-sm font-semibold transition',
                 mode === 'login'
                   ? 'bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-sky-200'
                   : 'text-slate-500 dark:text-slate-400',
@@ -157,7 +167,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => switchMode('register')}
               className={[
-                'rounded-full px-5 py-2 text-sm font-semibold transition',
+                'flex-1 rounded-full px-4 py-2 text-sm font-semibold transition',
                 mode === 'register'
                   ? 'bg-white text-blue-700 shadow-sm dark:bg-slate-700 dark:text-sky-200'
                   : 'text-slate-500 dark:text-slate-400',
@@ -167,10 +177,10 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-blue-600 dark:text-sky-300">
+          <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-600 dark:text-sky-300 sm:text-xs sm:tracking-[0.24em]">
             {mode === 'login' ? 'Acceso' : 'Registro'}
           </p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 sm:mt-3 sm:text-3xl">
             {mode === 'login' ? 'Bienvenido de nuevo' : 'Crear usuario'}
           </h2>
           <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
@@ -180,7 +190,7 @@ export default function LoginPage() {
           </p>
 
           {mode === 'login' ? (
-            <form onSubmit={handleLoginSubmit} className="mt-8 space-y-5">
+            <form onSubmit={handleLoginSubmit} className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
               <label className="block">
                 <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                   Correo
@@ -191,7 +201,7 @@ export default function LoginPage() {
                   value={loginForm.email}
                   onChange={(event) => updateLoginField('email', event.target.value)}
                   placeholder="tu-correo@dominio.com"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -206,7 +216,7 @@ export default function LoginPage() {
                   value={loginForm.password}
                   onChange={(event) => updateLoginField('password', event.target.value)}
                   placeholder="Tu contrasena"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -221,14 +231,14 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:py-4"
               >
                 <ArrowRight size={16} />
                 {submitting ? 'Ingresando...' : 'Entrar'}
               </button>
             </form>
           ) : (
-            <form onSubmit={handleRegisterSubmit} className="mt-8 space-y-5">
+            <form onSubmit={handleRegisterSubmit} className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
               <label className="block">
                 <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                   Nombre completo
@@ -239,7 +249,7 @@ export default function LoginPage() {
                   value={registerForm.fullName}
                   onChange={(event) => updateRegisterField('fullName', event.target.value)}
                   placeholder="Jader Rios"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -254,7 +264,7 @@ export default function LoginPage() {
                   value={registerForm.email}
                   onChange={(event) => updateRegisterField('email', event.target.value)}
                   placeholder="tu-correo@dominio.com"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -269,7 +279,7 @@ export default function LoginPage() {
                   value={registerForm.password}
                   onChange={(event) => updateRegisterField('password', event.target.value)}
                   placeholder="Minimo 6 caracteres"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -284,7 +294,7 @@ export default function LoginPage() {
                   value={registerForm.confirmPassword}
                   onChange={(event) => updateRegisterField('confirmPassword', event.target.value)}
                   placeholder="Repite tu contrasena"
-                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900"
+                  className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base outline-none transition focus:border-blue-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-900 sm:px-5 sm:py-4"
                   required
                 />
               </label>
@@ -299,7 +309,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:py-4"
               >
                 <ArrowRight size={16} />
                 {submitting ? 'Creando cuenta...' : 'Crear cuenta'}

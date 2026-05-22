@@ -10,11 +10,6 @@ import { useTransactionEvents } from '../../hooks/useTransactionEvents';
 import { fetchMonthlySummary } from '../../services/dashboardService';
 import { fetchTransactions } from '../../services/transactionService';
 
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-});
-
 function buildDashboardInsights(transactions) {
   const recentTransactions = transactions.slice(0, 5);
   const expenseTransactions = transactions.filter((transaction) => transaction.type === 'expense');
@@ -58,7 +53,14 @@ function buildDashboardInsights(transactions) {
 
 export default function DashboardPage() {
   const { version } = useTransactionEvents();
-  const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0, user: null });
+  const [summary, setSummary] = useState({
+    income: 0,
+    expense: 0,
+    balance: 0,
+    currency: 'USD',
+    excludedOpeningBalances: 0,
+    user: null,
+  });
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -119,6 +121,10 @@ export default function DashboardPage() {
 
   const insights = buildDashboardInsights(transactions);
   const savingsRate = summary.income > 0 ? Math.max((summary.balance / summary.income) * 100, 0) : 0;
+  const money = new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: summary.currency || 'USD',
+  });
 
   return (
     <div className="space-y-6">
@@ -149,7 +155,7 @@ export default function DashboardPage() {
           value={loading ? '...' : money.format(summary.balance)}
           icon={Wallet}
           tone="blue"
-          subtitle="La diferencia entre lo que entra y lo que sale."
+          subtitle={`Incluye saldos iniciales y movimientos en ${summary.currency}.`}
         />
         <SummaryCard
           title="Gasto del mes"
@@ -173,6 +179,12 @@ export default function DashboardPage() {
           subtitle="Porcentaje de tus ingresos que logras conservar."
         />
       </section>
+
+      {summary.excludedOpeningBalances > 0 ? (
+        <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200">
+          El saldo disponible solo consolida saldos iniciales de cuentas en {summary.currency}. Las cuentas en otra moneda no se mezclan sin tipo de cambio.
+        </div>
+      ) : null}
 
       <InsightCards
         topCategory={insights.topCategory}
