@@ -1,9 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-});
+import { formatTransactionAmount } from '../../utils/money';
 
 function TypeBadge({ type }) {
   const isIncome = type === 'income';
@@ -56,7 +52,7 @@ export default function RecentTransactions({ transactions }) {
 
             <p className={`text-lg font-bold ${transaction.type === 'income' ? 'text-emerald-600 dark:text-emerald-300' : 'text-slate-900 dark:text-slate-100'}`}>
               {transaction.type === 'income' ? '+' : '-'}
-              {money.format(Number(transaction.amount))}
+              {formatTransactionAmount(transaction)}
             </p>
           </article>
         ))}

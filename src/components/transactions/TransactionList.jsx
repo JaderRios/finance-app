@@ -1,7 +1,4 @@
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-});
+import { formatTransactionAmount } from '../../utils/money';
 
 export default function TransactionList({ transactions, loading, error }) {
   return (
@@ -67,7 +64,7 @@ export default function TransactionList({ transactions, loading, error }) {
                     {transaction.description || 'Sin descripcion'}
                   </td>
                   <td className="px-4 py-4 text-right font-semibold text-slate-900 dark:text-slate-100">
-                    {money.format(Number(transaction.amount))}
+                    {formatTransactionAmount(transaction)}
                   </td>
                 </tr>
               ))}
