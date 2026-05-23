@@ -1,10 +1,6 @@
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0,
-});
+import { formatMoneyByCurrency } from '../../utils/money';
 
-export default function CategoryBreakdownChart({ categories, totalExpense }) {
+export default function CategoryBreakdownChart({ categories, totalExpense, currency }) {
   return (
     <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
       <div className="mb-5">
@@ -33,7 +29,7 @@ export default function CategoryBreakdownChart({ categories, totalExpense }) {
                   <p className="text-sm text-slate-500 dark:text-slate-400">{share.toFixed(1)}% del total</p>
                 </div>
                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  {money.format(category.total)}
+                  {formatMoneyByCurrency(category.total, currency)}
                 </p>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">

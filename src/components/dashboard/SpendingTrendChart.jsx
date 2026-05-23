@@ -1,3 +1,5 @@
+import { formatMoneyByCurrency } from '../../utils/money';
+
 function buildPath(points, width, height, maxValue) {
   if (points.length === 0) {
     return '';
@@ -12,7 +14,7 @@ function buildPath(points, width, height, maxValue) {
     .join(' ');
 }
 
-export default function SpendingTrendChart({ points }) {
+export default function SpendingTrendChart({ points, currency }) {
   const width = 620;
   const height = 220;
   const maxValue = Math.max(...points.map((point) => point.value), 1);
@@ -67,7 +69,9 @@ export default function SpendingTrendChart({ points }) {
           {points.map((point) => (
             <div key={point.label} className="text-center">
               <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{point.label}</p>
-              <p className="mt-1 text-xs text-slate-700 dark:text-slate-200">${point.value.toFixed(0)}</p>
+              <p className="mt-1 text-xs text-slate-700 dark:text-slate-200">
+                {formatMoneyByCurrency(point.value, currency)}
+              </p>
             </div>
           ))}
         </div>

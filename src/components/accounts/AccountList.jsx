@@ -1,9 +1,5 @@
 import { Trash2, Wallet } from 'lucide-react';
-
-const moneyFormatters = {
-  PEN: new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }),
-  USD: new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'USD' }),
-};
+import { formatMoneyByCurrency } from '../../utils/money';
 
 export default function AccountList({ accounts, loading, deletingId, onDelete }) {
   return (
@@ -60,7 +56,7 @@ export default function AccountList({ accounts, loading, deletingId, onDelete })
               <div className="mt-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">Saldo inicial</p>
                 <p className="mt-2 text-2xl font-black text-slate-900 dark:text-slate-100">
-                  {moneyFormatters[account.currency]?.format(Number(account.initial_balance || 0)) ?? account.initial_balance}
+                  {formatMoneyByCurrency(account.initial_balance, account.currency)}
                 </p>
               </div>
             </article>

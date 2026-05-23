@@ -10,8 +10,17 @@ export async function fetchMonthlySummary() {
     throw new Error('No hay una sesión activa en Supabase.');
   }
 
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+  const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1).toISOString().slice(0, 10);
+
   const [{ data, error }, accounts, profile] = await Promise.all([
-    supabase.from('resumen_mensual').select('type, total').eq('user_id', user.id),
+    supabase
+      .from('transactions')
+      .select('type, amount, amount_base')
+      .eq('user_id', user.id)
+      .gte('date', monthStart)
+      .lt('date', nextMonthStart),
     fetchAccounts(),
     fetchProfile(),
   ]);
@@ -20,9 +29,13 @@ export async function fetchMonthlySummary() {
     throw error;
   }
 
-  const income = Number(data.find((item) => item.type === 'income')?.total ?? 0);
-  const expense = Number(data.find((item) => item.type === 'expense')?.total ?? 0);
-  const baseCurrency = profile?.currency ?? 'USD';
+  const baseCurrency = profile?.currency ?? 'PEN';
+  const income = (data ?? [])
+    .filter((transaction) => transaction.type === 'income')
+    .reduce((sum, transaction) => sum + Number(transaction.amount_base ?? transaction.amount ?? 0), 0);
+  const expense = (data ?? [])
+    .filter((transaction) => transaction.type === 'expense')
+    .reduce((sum, transaction) => sum + Number(transaction.amount_base ?? transaction.amount ?? 0), 0);
   const accountsInBaseCurrency = accounts.filter((account) => account.currency === baseCurrency);
   const openingBalance = accountsInBaseCurrency.reduce(
     (sum, account) => sum + Number(account.initial_balance ?? 0),

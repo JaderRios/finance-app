@@ -9,6 +9,11 @@ import SummaryCard from '../../components/dashboard/SummaryCard';
 import { useTransactionEvents } from '../../hooks/useTransactionEvents';
 import { fetchMonthlySummary } from '../../services/dashboardService';
 import { fetchTransactions } from '../../services/transactionService';
+import { formatMoneyByCurrency } from '../../utils/money';
+
+function getDashboardAmount(transaction) {
+  return Number(transaction.amount_base ?? transaction.amount ?? 0);
+}
 
 function buildDashboardInsights(transactions) {
   const recentTransactions = transactions.slice(0, 5);
@@ -22,14 +27,14 @@ function buildDashboardInsights(transactions) {
 
     const value = expenseTransactions
       .filter((transaction) => transaction.date === key)
-      .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+      .reduce((sum, transaction) => sum + getDashboardAmount(transaction), 0);
 
     return { key, label, value };
   });
 
   const categoryMap = expenseTransactions.reduce((accumulator, transaction) => {
     const categoryName = transaction.categories?.name || 'Sin categoria';
-    accumulator[categoryName] = (accumulator[categoryName] || 0) + Number(transaction.amount);
+    accumulator[categoryName] = (accumulator[categoryName] || 0) + getDashboardAmount(transaction);
     return accumulator;
   }, {});
 
@@ -38,7 +43,7 @@ function buildDashboardInsights(transactions) {
     .sort((a, b) => b.total - a.total)
     .slice(0, 5);
 
-  const totalExpense = expenseTransactions.reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+  const totalExpense = expenseTransactions.reduce((sum, transaction) => sum + getDashboardAmount(transaction), 0);
   const averageExpense = expenseTransactions.length > 0 ? totalExpense / expenseTransactions.length : 0;
 
   return {
@@ -57,7 +62,7 @@ export default function DashboardPage() {
     income: 0,
     expense: 0,
     balance: 0,
-    currency: 'USD',
+    currency: 'PEN',
     excludedOpeningBalances: 0,
     user: null,
   });
@@ -121,10 +126,7 @@ export default function DashboardPage() {
 
   const insights = buildDashboardInsights(transactions);
   const savingsRate = summary.income > 0 ? Math.max((summary.balance / summary.income) * 100, 0) : 0;
-  const money = new Intl.NumberFormat('es-PE', {
-    style: 'currency',
-    currency: summary.currency || 'USD',
-  });
+  const dashboardCurrency = summary.currency || 'PEN';
 
   return (
     <div className="space-y-6">
@@ -152,21 +154,21 @@ export default function DashboardPage() {
       <section className="grid gap-6 md:grid-cols-2 2xl:grid-cols-4">
         <SummaryCard
           title="Saldo disponible"
-          value={loading ? '...' : money.format(summary.balance)}
+          value={loading ? '...' : formatMoneyByCurrency(summary.balance, dashboardCurrency)}
           icon={Wallet}
           tone="blue"
-          subtitle={`Incluye saldos iniciales y movimientos en ${summary.currency}.`}
+          subtitle={`Incluye saldos iniciales y movimientos en ${dashboardCurrency}.`}
         />
         <SummaryCard
           title="Gasto del mes"
-          value={loading ? '...' : money.format(summary.expense)}
+          value={loading ? '...' : formatMoneyByCurrency(summary.expense, dashboardCurrency)}
           icon={TrendingDown}
           tone="violet"
           subtitle="Todo lo que has registrado como gasto en este periodo."
         />
         <SummaryCard
           title="Ingresos acumulados"
-          value={loading ? '...' : money.format(summary.income)}
+          value={loading ? '...' : formatMoneyByCurrency(summary.income, dashboardCurrency)}
           icon={Wallet}
           tone="white"
           subtitle="Tus entradas de dinero registradas hasta ahora."
@@ -182,7 +184,7 @@ export default function DashboardPage() {
 
       {summary.excludedOpeningBalances > 0 ? (
         <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200">
-          El saldo disponible solo consolida saldos iniciales de cuentas en {summary.currency}. Las cuentas en otra moneda no se mezclan sin tipo de cambio.
+          El saldo disponible solo consolida saldos iniciales de cuentas en {dashboardCurrency}. Las cuentas en otra moneda no se mezclan sin tipo de cambio.
         </div>
       ) : null}
 
@@ -190,13 +192,15 @@ export default function DashboardPage() {
         topCategory={insights.topCategory}
         averageExpense={insights.averageExpense}
         savingsRate={savingsRate}
+        currency={dashboardCurrency}
       />
 
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-        <SpendingTrendChart points={insights.last7Days} />
+        <SpendingTrendChart points={insights.last7Days} currency={dashboardCurrency} />
         <CategoryBreakdownChart
           categories={insights.categoryBreakdown}
           totalExpense={insights.totalExpense}
+          currency={dashboardCurrency}
         />
       </section>
 

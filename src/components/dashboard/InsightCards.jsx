@@ -1,19 +1,15 @@
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0,
-});
+import { formatMoneyByCurrency } from '../../utils/money';
 
-export default function InsightCards({ topCategory, averageExpense, savingsRate }) {
+export default function InsightCards({ topCategory, averageExpense, savingsRate, currency }) {
   const cards = [
     {
       title: 'Categoria principal',
       value: topCategory ? topCategory.name : 'Sin datos',
-      helper: topCategory ? money.format(topCategory.total) : 'Registra mas movimientos',
+      helper: topCategory ? formatMoneyByCurrency(topCategory.total, currency) : 'Registra mas movimientos',
     },
     {
       title: 'Gasto diario promedio',
-      value: money.format(averageExpense),
+      value: formatMoneyByCurrency(averageExpense, currency),
       helper: 'Promedio de tus gastos recientes',
     },
     {
