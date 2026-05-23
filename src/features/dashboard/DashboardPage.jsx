@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RefreshCw, TrendingDown, Wallet } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import CategoryBreakdownChart from '../../components/dashboard/CategoryBreakdownChart';
@@ -11,8 +11,34 @@ import { fetchMonthlySummary } from '../../services/dashboardService';
 import { fetchTransactions } from '../../services/transactionService';
 import { formatMoneyByCurrency } from '../../utils/money';
 
+const DASHBOARD_CURRENCY = 'PEN';
+
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function getDashboardAmount(transaction) {
-  return Number(transaction.amount_base ?? transaction.amount ?? 0);
+  const amount = Number(transaction.amount ?? 0);
+  const amountBase = Number(transaction.amount_base ?? 0);
+  const exchangeRate = Number(transaction.exchange_rate ?? 0);
+  const transactionCurrency = transaction.currency || transaction.accounts?.currency || DASHBOARD_CURRENCY;
+
+  if (transaction.base_currency === DASHBOARD_CURRENCY && transaction.amount_base != null) {
+    return amountBase;
+  }
+
+  if (transactionCurrency === DASHBOARD_CURRENCY) {
+    return amount;
+  }
+
+  if (transactionCurrency === 'USD' && exchangeRate > 0) {
+    return amount * exchangeRate;
+  }
+
+  return amountBase || amount;
 }
 
 function buildDashboardInsights(transactions) {
@@ -22,7 +48,7 @@ function buildDashboardInsights(transactions) {
   const last7Days = Array.from({ length: 7 }, (_, index) => {
     const date = new Date();
     date.setDate(date.getDate() - (6 - index));
-    const key = date.toISOString().slice(0, 10);
+    const key = toLocalDateKey(date);
     const label = date.toLocaleDateString('es-PE', { weekday: 'short' }).replace('.', '');
 
     const value = expenseTransactions
@@ -43,8 +69,13 @@ function buildDashboardInsights(transactions) {
     .sort((a, b) => b.total - a.total)
     .slice(0, 5);
 
-  const totalExpense = expenseTransactions.reduce((sum, transaction) => sum + getDashboardAmount(transaction), 0);
-  const averageExpense = expenseTransactions.length > 0 ? totalExpense / expenseTransactions.length : 0;
+  const totalExpense = expenseTransactions.reduce(
+    (sum, transaction) => sum + getDashboardAmount(transaction),
+    0
+  );
+  const averageExpense = last7Days.length > 0
+    ? last7Days.reduce((sum, point) => sum + point.value, 0) / last7Days.length
+    : 0;
 
   return {
     recentTransactions,
@@ -63,51 +94,28 @@ export default function DashboardPage() {
     expense: 0,
     balance: 0,
     currency: 'PEN',
-    excludedOpeningBalances: 0,
+    balancesByCurrency: { PEN: 0, USD: 0 },
     user: null,
   });
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const isSyncingRef = useRef(false);
 
-  useEffect(() => {
-    let ignore = false;
+  async function syncDashboard(options = {}) {
+    const { silent = false } = options;
 
-    async function syncDashboard() {
-      try {
-        setLoading(true);
-        setError('');
-
-        const [summaryData, transactionData] = await Promise.all([
-          fetchMonthlySummary(),
-          fetchTransactions({ limit: 180 }),
-        ]);
-
-        if (!ignore) {
-          setSummary(summaryData);
-          setTransactions(transactionData);
-        }
-      } catch {
-        if (!ignore) {
-          setError('No pudimos cargar tu informacion por el momento.');
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
+    if (isSyncingRef.current) {
+      return;
     }
 
-    syncDashboard();
-
-    return () => {
-      ignore = true;
-    };
-  }, [version]);
-
-  async function handleRefresh() {
     try {
-      setLoading(true);
+      isSyncingRef.current = true;
+
+      if (!silent) {
+        setLoading(true);
+      }
+
       setError('');
 
       const [summaryData, transactionData] = await Promise.all([
@@ -118,15 +126,44 @@ export default function DashboardPage() {
       setSummary(summaryData);
       setTransactions(transactionData);
     } catch {
-      setError('No pudimos actualizar tu informacion por el momento.');
+      setError('No pudimos cargar tu informacion por el momento.');
     } finally {
+      isSyncingRef.current = false;
       setLoading(false);
     }
   }
 
+  useEffect(() => {
+    queueMicrotask(() => {
+      syncDashboard();
+    });
+  }, [version]);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        syncDashboard({ silent: true });
+      }
+    }
+
+    function handleWindowFocus() {
+      syncDashboard({ silent: true });
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleWindowFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleWindowFocus);
+    };
+  }, []);
+
   const insights = buildDashboardInsights(transactions);
-  const savingsRate = summary.income > 0 ? Math.max((summary.balance / summary.income) * 100, 0) : 0;
-  const dashboardCurrency = summary.currency || 'PEN';
+  const savingsRate =
+    summary.income > 0 ? Math.max(((summary.income - summary.expense) / summary.income) * 100, 0) : 0;
+  const dashboardCurrency = DASHBOARD_CURRENCY;
+  const balances = summary.balancesByCurrency ?? { PEN: summary.balance ?? 0, USD: 0 };
 
   return (
     <div className="space-y-6">
@@ -136,7 +173,7 @@ export default function DashboardPage() {
         description="Consulta tu balance, sigue la tendencia de tus gastos y descubre en que categorias se concentra tu dinero."
         action={
           <button
-            onClick={handleRefresh}
+            onClick={() => syncDashboard()}
             className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             <RefreshCw size={16} />
@@ -153,11 +190,22 @@ export default function DashboardPage() {
 
       <section className="grid gap-6 md:grid-cols-2 2xl:grid-cols-4">
         <SummaryCard
-          title="Saldo disponible"
-          value={loading ? '...' : formatMoneyByCurrency(summary.balance, dashboardCurrency)}
+          title="Saldos disponibles"
+          value={
+            loading ? (
+              '...'
+            ) : (
+              <div className="space-y-1 text-3xl">
+                <p>{formatMoneyByCurrency(balances.PEN, 'PEN')}</p>
+                <p className="text-2xl text-slate-600 dark:text-slate-300">
+                  {formatMoneyByCurrency(balances.USD, 'USD')}
+                </p>
+              </div>
+            )
+          }
           icon={Wallet}
           tone="blue"
-          subtitle={`Incluye saldos iniciales y movimientos en ${dashboardCurrency}.`}
+          subtitle="Separado por moneda para no mezclar soles con dolares."
         />
         <SummaryCard
           title="Gasto del mes"
@@ -182,11 +230,9 @@ export default function DashboardPage() {
         />
       </section>
 
-      {summary.excludedOpeningBalances > 0 ? (
-        <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200">
-          El saldo disponible solo consolida saldos iniciales de cuentas en {dashboardCurrency}. Las cuentas en otra moneda no se mezclan sin tipo de cambio.
-        </div>
-      ) : null}
+      <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200">
+        El dashboard muestra gastos, ingresos e indicadores en soles. El historial conserva la moneda real de cada movimiento.
+      </div>
 
       <InsightCards
         topCategory={insights.topCategory}

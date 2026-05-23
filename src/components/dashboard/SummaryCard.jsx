@@ -13,7 +13,7 @@ export default function SummaryCard({ title, value, icon: Icon, tone = 'blue', s
         </div>
         <span className="font-medium">{title}</span>
       </div>
-      <p className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">{value}</p>
+      <div className="text-4xl font-black tracking-tight text-slate-900 dark:text-slate-100">{value}</div>
       {subtitle ? <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{subtitle}</p> : null}
     </article>
   );
