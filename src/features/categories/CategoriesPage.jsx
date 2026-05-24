@@ -82,7 +82,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Categorias"
         title="Organiza tu dinero a tu manera"
@@ -94,15 +94,15 @@ export default function CategoriesPage() {
           className={[
             'rounded-[28px] p-5 text-sm',
             feedback.type === 'success'
-              ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
-              : 'border border-rose-200 bg-rose-50 text-rose-700',
+              ? 'border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-300'
+              : 'border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-300',
           ].join(' ')}
         >
           {feedback.message}
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">
         <CategoryForm onCreate={handleCreate} submitting={creating} />
         <CategoryList
           categories={categories}

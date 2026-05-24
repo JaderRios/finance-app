@@ -80,7 +80,7 @@ export default function AccountsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Cuentas"
         title="Tus bolsillos de dinero"
@@ -100,7 +100,7 @@ export default function AccountsPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">
         <AccountForm onCreate={handleCreate} submitting={creating} />
         <AccountList accounts={accounts} loading={loading} deletingId={deletingId} onDelete={handleDelete} />
       </div>

@@ -53,31 +53,40 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#dfeaff,_#f8fbff_44%,_#f2f6ff_100%)] p-3 text-slate-900 transition-colors dark:bg-[radial-gradient(circle_at_top_left,_#10203b,_#0f172a_44%,_#111827_100%)] dark:text-slate-100 md:p-5">
-      <div className="mx-auto grid h-full max-w-[1600px] grid-cols-1 gap-4 rounded-[34px] border border-white/60 bg-white/45 p-3 shadow-[0_25px_100px_rgba(37,99,235,0.10)] backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/55 lg:grid-cols-[280px_1fr] lg:p-5">
+    <div className="h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#dfeaff,_#f8fbff_44%,_#f2f6ff_100%)] p-2 text-slate-900 transition-colors dark:bg-[radial-gradient(circle_at_top_left,_#10203b,_#0f172a_44%,_#111827_100%)] dark:text-slate-100 md:p-5">
+      <div className="mx-auto grid h-full max-w-[1600px] grid-cols-1 gap-3 rounded-[26px] border border-white/60 bg-white/45 p-2 shadow-[0_25px_100px_rgba(37,99,235,0.10)] backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/55 sm:rounded-[30px] sm:p-3 lg:gap-4 lg:rounded-[34px] lg:p-5 lg:grid-cols-[280px_1fr]">
         <button
           type="button"
           onClick={() => setSidebarOpen((current) => !current)}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/90 dark:text-slate-100 lg:hidden"
+          className="sticky top-0 z-30 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/90 dark:text-slate-100 lg:hidden"
         >
           {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           {sidebarOpen ? 'Cerrar menu' : 'Abrir menu'}
         </button>
 
+        {sidebarOpen ? (
+          <button
+            type="button"
+            aria-label="Cerrar menu"
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 z-20 bg-slate-950/40 backdrop-blur-sm lg:hidden"
+          />
+        ) : null}
+
         <aside
           className={[
-            'h-full overflow-hidden rounded-[30px] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,255,0.92))] p-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(15,23,42,0.88))] dark:shadow-[0_18px_50px_rgba(2,6,23,0.45)]',
-            sidebarOpen ? 'block' : 'hidden lg:block',
+            'z-30 h-full overflow-hidden rounded-[26px] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,255,0.92))] p-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(15,23,42,0.88))] dark:shadow-[0_18px_50px_rgba(2,6,23,0.45)] sm:rounded-[30px] sm:p-5',
+            sidebarOpen ? 'fixed inset-x-2 bottom-2 top-16 block lg:static lg:inset-auto' : 'hidden lg:block',
           ].join(' ')}
         >
           <div className="flex h-full flex-col">
-            <div className="mb-10 flex items-center gap-3">
-              <div className="grid size-12 place-items-center rounded-[18px] bg-[linear-gradient(180deg,#2f6df6,#1e54df)] text-white shadow-lg shadow-blue-200">
+            <div className="mb-6 flex items-center gap-3 lg:mb-10">
+              <div className="grid size-11 place-items-center rounded-[16px] bg-[linear-gradient(180deg,#2f6df6,#1e54df)] text-white shadow-lg shadow-blue-200 lg:size-12 lg:rounded-[18px]">
                 <Landmark size={22} />
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tight text-blue-700 dark:text-sky-300">FinanzasApp</h1>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Control personal</p>
+                <h1 className="text-2xl font-black tracking-tight text-blue-700 dark:text-sky-300 lg:text-3xl">FinanzasApp</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 lg:text-sm">Control personal</p>
               </div>
             </div>
 
@@ -92,7 +101,7 @@ export default function AppLayout() {
               ))}
             </nav>
 
-            <div className="mt-6 rounded-[24px] border border-slate-100 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="mt-6 hidden rounded-[24px] border border-slate-100 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-900/70 lg:block">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Apariencia</p>
@@ -121,7 +130,7 @@ export default function AppLayout() {
                     <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                       {user?.user_metadata?.full_name || user?.email || 'Usuario'}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Mi espacio</p>
+                    <p className="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">Mi espacio</p>
                   </div>
                 </div>
 
@@ -138,7 +147,7 @@ export default function AppLayout() {
           </div>
         </aside>
 
-        <main className="min-h-0 overflow-y-auto pr-1">
+        <main className="min-h-0 overflow-y-auto pr-0 lg:pr-1">
           <Outlet />
         </main>
       </div>

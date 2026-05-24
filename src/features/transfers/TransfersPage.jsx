@@ -56,7 +56,7 @@ export default function TransfersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Transferencias"
         title="Mover entre dolares y soles"
@@ -76,12 +76,12 @@ export default function TransfersPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[460px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[460px_1fr]">
         <TransferForm accounts={accounts} onCreate={handleCreate} submitting={submitting} />
 
-        <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
+        <section className="rounded-[26px] border border-white/60 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:rounded-[30px] sm:p-5 lg:rounded-[32px] lg:p-6">
           <div className="mb-5">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Ultimas transferencias</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 sm:text-2xl">Ultimas transferencias</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Te sirve para revisar cuando moviste dinero entre monedas.
             </p>

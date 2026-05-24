@@ -166,7 +166,7 @@ export default function DashboardPage() {
   const balances = summary.balancesByCurrency ?? { PEN: summary.balance ?? 0, USD: 0 };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Resumen"
         title="Tu panorama financiero"
@@ -188,7 +188,7 @@ export default function DashboardPage() {
         </div>
       ) : null}
 
-      <section className="grid gap-6 md:grid-cols-2 2xl:grid-cols-4">
+      <section className="grid gap-3 sm:gap-4 md:grid-cols-2 2xl:grid-cols-4 lg:gap-6">
         <SummaryCard
           title="Saldos disponibles"
           value={
@@ -230,7 +230,7 @@ export default function DashboardPage() {
         />
       </section>
 
-      <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200">
+      <div className="hidden rounded-[24px] border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-200 sm:block">
         El dashboard muestra gastos, ingresos e indicadores en soles. El historial conserva la moneda real de cada movimiento.
       </div>
 

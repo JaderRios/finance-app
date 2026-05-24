@@ -3,17 +3,17 @@ import TransactionForm from '../../components/transactions/TransactionForm';
 
 export default function NewTransactionPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Movimiento"
         title="Registrar movimiento"
         description="Guarda tus ingresos y gastos de forma clara para mantener tu control financiero al dia."
       />
 
-      <div className="grid gap-6 xl:grid-cols-[440px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[440px_1fr]">
         <TransactionForm />
 
-        <section className="rounded-[32px] border border-white/60 bg-[linear-gradient(180deg,#ffffff,#f7faff)] p-6 shadow-sm dark:border-slate-800 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(30,41,59,0.86))]">
+        <section className="hidden rounded-[32px] border border-white/60 bg-[linear-gradient(180deg,#ffffff,#f7faff)] p-6 shadow-sm dark:border-slate-800 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(30,41,59,0.86))] xl:block">
           <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Consejos rapidos</h3>
           <div className="mt-5 space-y-4 text-sm leading-6 text-slate-600 dark:text-slate-300">
             <p>
