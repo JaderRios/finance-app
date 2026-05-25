@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { RefreshCw, TrendingDown, Wallet } from 'lucide-react';
+import { ArrowDownCircle, ArrowUpCircle, PiggyBank, RefreshCw, TrendingDown, Wallet } from 'lucide-react';
 import PageHeader from '../../components/ui/PageHeader';
 import CategoryBreakdownChart from '../../components/dashboard/CategoryBreakdownChart';
 import InsightCards from '../../components/dashboard/InsightCards';
@@ -162,6 +162,24 @@ export default function DashboardPage() {
   const insights = buildDashboardInsights(transactions);
   const savingsRate =
     summary.income > 0 ? Math.max(((summary.income - summary.expense) / summary.income) * 100, 0) : 0;
+  const savingsVisual =
+    savingsRate >= 30
+      ? {
+          icon: ArrowUpCircle,
+          tone: 'emerald',
+          subtitle: 'Estas conservando una parte saludable de tus ingresos.',
+        }
+      : savingsRate >= 10
+        ? {
+            icon: PiggyBank,
+            tone: 'amber',
+            subtitle: 'Vas guardando algo, pero aun tienes margen para mejorar.',
+          }
+        : {
+            icon: ArrowDownCircle,
+            tone: 'rose',
+            subtitle: 'Tu margen de ahorro esta apretado en este periodo.',
+          };
   const dashboardCurrency = DASHBOARD_CURRENCY;
   const balances = summary.balancesByCurrency ?? { PEN: summary.balance ?? 0, USD: 0 };
 
@@ -211,22 +229,22 @@ export default function DashboardPage() {
           title="Gasto del mes"
           value={loading ? '...' : formatMoneyByCurrency(summary.expense, dashboardCurrency)}
           icon={TrendingDown}
-          tone="violet"
+          tone="rose"
           subtitle="Todo lo que has registrado como gasto en este periodo."
         />
         <SummaryCard
           title="Ingresos acumulados"
           value={loading ? '...' : formatMoneyByCurrency(summary.income, dashboardCurrency)}
-          icon={Wallet}
-          tone="white"
+          icon={ArrowUpCircle}
+          tone="emerald"
           subtitle="Tus entradas de dinero registradas hasta ahora."
         />
         <SummaryCard
-          title="Ahorro estimado"
+          title="Tasa de ahorro"
           value={loading ? '...' : `${savingsRate.toFixed(0)}%`}
-          icon={TrendingDown}
-          tone="white"
-          subtitle="Porcentaje de tus ingresos que logras conservar."
+          icon={savingsVisual.icon}
+          tone={savingsVisual.tone}
+          subtitle={savingsVisual.subtitle}
         />
       </section>
 
@@ -241,7 +259,7 @@ export default function DashboardPage() {
         currency={dashboardCurrency}
       />
 
-      <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.85fr)] 2xl:grid-cols-[minmax(0,1.6fr)_minmax(380px,0.8fr)]">
         <SpendingTrendChart points={insights.last7Days} currency={dashboardCurrency} />
         <CategoryBreakdownChart
           categories={insights.categoryBreakdown}

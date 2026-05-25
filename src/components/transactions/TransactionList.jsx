@@ -1,4 +1,5 @@
 import { PencilLine } from 'lucide-react';
+import Pagination from '../ui/Pagination';
 import { formatTransactionAmount } from '../../utils/money';
 
 function TypeBadge({ type }) {
@@ -16,7 +17,16 @@ function TypeBadge({ type }) {
   );
 }
 
-export default function TransactionList({ transactions, loading, error, onEdit }) {
+export default function TransactionList({
+  transactions,
+  loading,
+  error,
+  onEdit,
+  currentPage,
+  pageSize,
+  totalItems,
+  onPageChange,
+}) {
   return (
     <section className="rounded-[32px] border border-white/60 bg-white/95 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-6">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -27,7 +37,7 @@ export default function TransactionList({ transactions, loading, error, onEdit }
           </p>
         </div>
         <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-          {transactions.length} {transactions.length === 1 ? 'movimiento' : 'movimientos'}
+          {totalItems ?? transactions.length} {(totalItems ?? transactions.length) === 1 ? 'movimiento' : 'movimientos'}
         </p>
       </div>
 
@@ -159,6 +169,14 @@ export default function TransactionList({ transactions, loading, error, onEdit }
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            pageSize={pageSize}
+            totalItems={totalItems ?? transactions.length}
+            onPageChange={onPageChange}
+            itemLabel="movimientos"
+          />
         </>
       ) : null}
     </section>
