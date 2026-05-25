@@ -1,4 +1,5 @@
 import { Trash2 } from 'lucide-react';
+import Pagination from '../ui/Pagination';
 
 function CategoryBadge({ type }) {
   return (
@@ -15,7 +16,16 @@ function CategoryBadge({ type }) {
   );
 }
 
-export default function CategoryList({ categories, loading, deletingId, onDelete }) {
+export default function CategoryList({
+  categories,
+  loading,
+  deletingId,
+  onDelete,
+  currentPage,
+  pageSize,
+  totalItems,
+  onPageChange,
+}) {
   return (
     <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
       <div className="mb-5">
@@ -32,6 +42,7 @@ export default function CategoryList({ categories, loading, deletingId, onDelete
       ) : null}
 
       {!loading ? (
+        <>
         <div className="space-y-3">
           {categories.length === 0 ? (
             <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-300">
@@ -64,6 +75,14 @@ export default function CategoryList({ categories, loading, deletingId, onDelete
             </article>
           ))}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalItems={totalItems ?? categories.length}
+          onPageChange={onPageChange}
+          itemLabel="categorias"
+        />
+        </>
       ) : null}
     </section>
   );

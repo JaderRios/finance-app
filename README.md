@@ -1,6 +1,6 @@
-# FinanzasApp
+# Balanzx
 
-Aplicacion web para gestionar finanzas personales construida con React, Vite, Tailwind CSS y Supabase.
+Balanzx es una aplicacion web para gestionar finanzas personales construida con React, Vite, Tailwind CSS y Supabase.
 
 ## Scripts
 

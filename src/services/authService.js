@@ -4,7 +4,7 @@ async function ensureDefaultData(user, fullName) {
   const profilePayload = {
     id: user.id,
     full_name: fullName,
-    currency: 'USD',
+    currency: 'PEN',
     updated_at: new Date().toISOString(),
   };
 

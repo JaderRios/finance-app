@@ -5,7 +5,9 @@ import PageHeader from '../../components/ui/PageHeader';
 import { createAccount, deactivateAccount, fetchAccounts } from '../../services/accountService';
 
 export default function AccountsPage() {
+  const pageSize = 6;
   const [accounts, setAccounts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState('');
@@ -51,6 +53,7 @@ export default function AccountsPage() {
           return a.name.localeCompare(b.name);
         })
       );
+      setCurrentPage(1);
       setFeedback({ type: 'success', message: 'Cuenta creada correctamente.' });
     } catch {
       setFeedback({ type: 'error', message: 'No pudimos crear la cuenta.' });
@@ -71,6 +74,7 @@ export default function AccountsPage() {
       setFeedback({ type: '', message: '' });
       await deactivateAccount(account.id);
       setAccounts((current) => current.filter((item) => item.id !== account.id));
+      setCurrentPage(1);
       setFeedback({ type: 'success', message: 'Cuenta ocultada correctamente.' });
     } catch {
       setFeedback({ type: 'error', message: 'No pudimos ocultar la cuenta.' });
@@ -79,8 +83,10 @@ export default function AccountsPage() {
     }
   }
 
+  const paginatedAccounts = accounts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Cuentas"
         title="Tus bolsillos de dinero"
@@ -100,9 +106,18 @@ export default function AccountsPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[minmax(340px,420px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(360px,460px)_minmax(0,1fr)]">
         <AccountForm onCreate={handleCreate} submitting={creating} />
-        <AccountList accounts={accounts} loading={loading} deletingId={deletingId} onDelete={handleDelete} />
+        <AccountList
+          accounts={paginatedAccounts}
+          loading={loading}
+          deletingId={deletingId}
+          onDelete={handleDelete}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalItems={accounts.length}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

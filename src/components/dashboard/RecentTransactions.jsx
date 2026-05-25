@@ -1,9 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-
-const money = new Intl.NumberFormat('es-PE', {
-  style: 'currency',
-  currency: 'USD',
-});
+import { formatTransactionAmount } from '../../utils/money';
 
 function TypeBadge({ type }) {
   const isIncome = type === 'income';
@@ -24,10 +20,10 @@ function TypeBadge({ type }) {
 
 export default function RecentTransactions({ transactions }) {
   return (
-    <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
+    <section className="rounded-[26px] border border-white/60 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:rounded-[30px] sm:p-5 lg:rounded-[32px] lg:p-6">
       <div className="mb-5 flex items-center justify-between">
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Actividad reciente</h3>
-        <span className="text-sm font-medium text-blue-600 dark:text-sky-300">Ultimos movimientos</span>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 sm:text-2xl">Actividad reciente</h3>
+        <span className="hidden text-sm font-medium text-blue-600 dark:text-sky-300 sm:block">Ultimos movimientos</span>
       </div>
 
       <div className="space-y-4">
@@ -40,7 +36,7 @@ export default function RecentTransactions({ transactions }) {
         {transactions.map((transaction) => (
           <article
             key={transaction.id}
-            className="flex flex-col gap-3 rounded-2xl px-3 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/70 md:flex-row md:items-center md:justify-between"
+            className="flex flex-col gap-3 rounded-2xl px-2 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/70 md:flex-row md:items-center md:justify-between"
           >
             <div className="flex items-center gap-3">
               <TypeBadge type={transaction.type} />
@@ -54,9 +50,9 @@ export default function RecentTransactions({ transactions }) {
               </div>
             </div>
 
-            <p className={`text-lg font-bold ${transaction.type === 'income' ? 'text-emerald-600 dark:text-emerald-300' : 'text-slate-900 dark:text-slate-100'}`}>
+            <p className={`text-base font-bold sm:text-lg ${transaction.type === 'income' ? 'text-emerald-600 dark:text-emerald-300' : 'text-slate-900 dark:text-slate-100'}`}>
               {transaction.type === 'income' ? '+' : '-'}
-              {money.format(Number(transaction.amount))}
+              {formatTransactionAmount(transaction)}
             </p>
           </article>
         ))}

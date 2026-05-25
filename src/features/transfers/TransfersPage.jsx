@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Pagination from '../../components/ui/Pagination';
 import PageHeader from '../../components/ui/PageHeader';
 import TransferForm from '../../components/transfers/TransferForm';
 import { useTransactionEvents } from '../../hooks/useTransactionEvents';
@@ -6,9 +7,11 @@ import { fetchAccounts } from '../../services/accountService';
 import { createTransfer, fetchTransfers } from '../../services/transferService';
 
 export default function TransfersPage() {
+  const pageSize = 8;
   const { notifyTransactionsChanged, version } = useTransactionEvents();
   const [accounts, setAccounts] = useState([]);
   const [transfers, setTransfers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
@@ -18,7 +21,7 @@ export default function TransfersPage() {
 
     async function loadData() {
       try {
-        const [accountsData, transfersData] = await Promise.all([fetchAccounts(), fetchTransfers()]);
+        const [accountsData, transfersData] = await Promise.all([fetchAccounts(), fetchTransfers(null)]);
         if (!ignore) {
           setAccounts(accountsData);
           setTransfers(transfersData);
@@ -46,6 +49,7 @@ export default function TransfersPage() {
       setSubmitting(true);
       setFeedback({ type: '', message: '' });
       await createTransfer(form);
+      setCurrentPage(1);
       notifyTransactionsChanged();
       setFeedback({ type: 'success', message: 'Transferencia registrada correctamente.' });
     } catch {
@@ -55,8 +59,10 @@ export default function TransfersPage() {
     }
   }
 
+  const paginatedTransfers = transfers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader
         eyebrow="Transferencias"
         title="Mover entre dolares y soles"
@@ -76,12 +82,12 @@ export default function TransfersPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[460px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[minmax(360px,460px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(380px,500px)_minmax(0,1fr)]">
         <TransferForm accounts={accounts} onCreate={handleCreate} submitting={submitting} />
 
-        <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
+        <section className="rounded-[26px] border border-white/60 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:rounded-[30px] sm:p-5 lg:rounded-[32px] lg:p-6">
           <div className="mb-5">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Ultimas transferencias</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 sm:text-2xl">Ultimas transferencias</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Te sirve para revisar cuando moviste dinero entre monedas.
             </p>
@@ -95,13 +101,13 @@ export default function TransfersPage() {
 
           {!loading ? (
             <div className="space-y-3">
-              {transfers.length === 0 ? (
+              {paginatedTransfers.length === 0 ? (
                 <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                   Aun no registras transferencias.
                 </div>
               ) : null}
 
-              {transfers.map((transfer) => (
+              {paginatedTransfers.map((transfer) => (
                 <article
                   key={transfer.id}
                   className="rounded-2xl border border-slate-100 px-4 py-4 dark:border-slate-800"
@@ -124,6 +130,16 @@ export default function TransfersPage() {
                 </article>
               ))}
             </div>
+          ) : null}
+
+          {!loading ? (
+            <Pagination
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalItems={transfers.length}
+              onPageChange={setCurrentPage}
+              itemLabel="transferencias"
+            />
           ) : null}
         </section>
       </div>

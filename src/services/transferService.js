@@ -31,13 +31,18 @@ export async function fetchTransfers(limit = 30) {
     throw new Error('No hay una sesion activa.');
   }
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('transfers')
     .select('id, from_amount, to_amount, exchange_rate, description, date, from_account_id, to_account_id')
     .eq('user_id', user.id)
     .order('date', { ascending: false })
-    .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', { ascending: false });
+
+  if (typeof limit === 'number') {
+    query = query.limit(limit);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
