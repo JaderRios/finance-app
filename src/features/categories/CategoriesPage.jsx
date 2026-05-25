@@ -5,7 +5,9 @@ import CategoryList from '../../components/categories/CategoryList';
 import { createCategory, deleteCategory, fetchCategories } from '../../services/categoryService';
 
 export default function CategoriesPage() {
+  const pageSize = 8;
   const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState('');
@@ -53,6 +55,7 @@ export default function CategoriesPage() {
           return a.name.localeCompare(b.name);
         })
       );
+      setCurrentPage(1);
       setFeedback({ type: 'success', message: 'Categoria creada correctamente.' });
     } catch {
       setFeedback({ type: 'error', message: 'No pudimos crear la categoria.' });
@@ -73,6 +76,7 @@ export default function CategoriesPage() {
       setFeedback({ type: '', message: '' });
       await deleteCategory(category.id);
       setCategories((current) => current.filter((item) => item.id !== category.id));
+      setCurrentPage(1);
       setFeedback({ type: 'success', message: 'Categoria eliminada correctamente.' });
     } catch {
       setFeedback({ type: 'error', message: 'No pudimos borrar la categoria.' });
@@ -80,6 +84,8 @@ export default function CategoriesPage() {
       setDeletingId('');
     }
   }
+
+  const paginatedCategories = categories.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -102,13 +108,17 @@ export default function CategoriesPage() {
         </div>
       ) : null}
 
-      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[minmax(340px,420px)_minmax(0,1fr)] 2xl:grid-cols-[minmax(360px,460px)_minmax(0,1fr)]">
         <CategoryForm onCreate={handleCreate} submitting={creating} />
         <CategoryList
-          categories={categories}
+          categories={paginatedCategories}
           loading={loading}
           deletingId={deletingId}
           onDelete={handleDelete}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalItems={categories.length}
+          onPageChange={setCurrentPage}
         />
       </div>
     </div>

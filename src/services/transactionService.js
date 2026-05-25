@@ -73,7 +73,8 @@ export async function fetchTransactions(options = {}) {
     throw new Error('No hay una sesion activa en Supabase.');
   }
 
-  const { limit = 12, type, categoryId, search, startDate, endDate, accountId } = options;
+  const limit = Object.prototype.hasOwnProperty.call(options, 'limit') ? options.limit : 12;
+  const { type, categoryId, search, startDate, endDate, accountId } = options;
 
   let query = supabase
     .from('transactions')

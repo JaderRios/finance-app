@@ -18,11 +18,13 @@ const initialFilters = {
 };
 
 export default function HistoryPage() {
+  const pageSize = 10;
   const { version } = useTransactionEvents();
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -34,7 +36,7 @@ export default function HistoryPage() {
       try {
         const [transactionData, categoryData, accountData] = await Promise.all([
           fetchTransactions({
-            limit: 100,
+            limit: null,
             type: filters.type,
             categoryId: filters.categoryId,
             accountId: filters.accountId,
@@ -72,13 +74,17 @@ export default function HistoryPage() {
 
   function updateFilter(field, value) {
     setLoading(true);
+    setCurrentPage(1);
     setFilters((current) => ({ ...current, [field]: value }));
   }
 
   function resetFilters() {
     setLoading(true);
+    setCurrentPage(1);
     setFilters(initialFilters);
   }
+
+  const paginatedTransactions = transactions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="space-y-6">
@@ -204,10 +210,14 @@ export default function HistoryPage() {
       </section>
 
       <TransactionList
-        transactions={transactions}
+        transactions={paginatedTransactions}
         loading={loading}
         error={error}
         onEdit={setEditingTransaction}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalItems={transactions.length}
+        onPageChange={setCurrentPage}
       />
 
       {editingTransaction ? (

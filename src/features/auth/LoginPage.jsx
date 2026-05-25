@@ -111,7 +111,7 @@ export default function LoginPage() {
               <span className="grid size-8 place-items-center rounded-full bg-blue-600 text-white sm:size-9">
                 <Landmark size={16} />
               </span>
-              FinanzasApp
+              Balanzx
             </div>
 
             <h1 className="mt-5 text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl lg:mt-8 lg:text-5xl">
@@ -145,8 +145,8 @@ export default function LoginPage() {
               <Landmark size={20} />
             </div>
             <div>
-              <p className="text-base font-black tracking-tight text-slate-900 dark:text-slate-100">FinanzasApp</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Control claro desde tu celular</p>
+              <p className="text-base font-black tracking-tight text-slate-900 dark:text-slate-100">Balanzx</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Tu balance claro desde el celular</p>
             </div>
           </div>
 

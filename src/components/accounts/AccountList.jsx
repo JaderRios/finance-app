@@ -1,7 +1,17 @@
 import { Trash2, Wallet } from 'lucide-react';
+import Pagination from '../ui/Pagination';
 import { formatMoneyByCurrency } from '../../utils/money';
 
-export default function AccountList({ accounts, loading, deletingId, onDelete }) {
+export default function AccountList({
+  accounts,
+  loading,
+  deletingId,
+  onDelete,
+  currentPage,
+  pageSize,
+  totalItems,
+  onPageChange,
+}) {
   return (
     <section className="rounded-[32px] border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
       <div className="mb-5">
@@ -18,6 +28,7 @@ export default function AccountList({ accounts, loading, deletingId, onDelete })
       ) : null}
 
       {!loading ? (
+        <>
         <div className="grid gap-4 md:grid-cols-2">
           {accounts.length === 0 ? (
             <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-300">
@@ -62,6 +73,14 @@ export default function AccountList({ accounts, loading, deletingId, onDelete })
             </article>
           ))}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalItems={totalItems ?? accounts.length}
+          onPageChange={onPageChange}
+          itemLabel="cuentas"
+        />
+        </>
       ) : null}
     </section>
   );
